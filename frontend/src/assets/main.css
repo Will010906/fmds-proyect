@@ -1,0 +1,278 @@
+@import "tailwindcss";
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Escalón de superficies. Los tonos intermedios se separaron del fondo base
+     para que al hacer scroll se distinga dónde empieza y termina cada sección;
+     antes eran casi idénticos y todo se leía como un solo bloque. */
+  --bg:    #06090F;
+  --bg2:   #0A1119;
+  --bg3:   #0E1826;
+  --bg4:   #131F30;
+  --card:  #101823;
+  --card2: #141F30;
+
+  --teal:  #2DD4B4;
+  --teal2: #25B99B;
+  --teal3: #1A9A82;
+  --teal-g: rgba(45,212,180,.07);
+  --teal-b: rgba(45,212,180,.18);
+  --teal-s: rgba(45,212,180,.25);
+
+  --white: #E8F4FF;
+  --w2:    rgba(232,244,255,.62);
+  --w3:    rgba(232,244,255,.36);
+  --w4:    rgba(232,244,255,.16);
+  --w5:    rgba(232,244,255,.06);
+
+  --line2: rgba(255,255,255,.07);
+  --line3: rgba(255,255,255,.04);
+
+  --f:  'Bricolage Grotesque', sans-serif;
+  --fs: 'Lora', serif;
+  --fm: 'JetBrains Mono', monospace;
+
+  /* ── Escala tipográfica ────────────────────────────────────────────────────
+     Diez escalones en progresión constante (~1.25) en vez de los treinta
+     tamaños sueltos que había antes. El mínimo es 10px porque por debajo el
+     texto deja de ser cómodo de leer, y el máximo baja de 66 a 52px: un
+     titular no necesita gritar para dominar la página, le basta con ser el
+     elemento más grande. Que la distancia entre escalones sea siempre la
+     misma es lo que hace que la jerarquía se perciba deliberada. */
+  --t-2xs: 10px;  /* microetiquetas en mayúsculas, siempre con tracking */
+  --t-xs:  11px;  /* metadatos, pies de tarjeta */
+  --t-sm:  13px;  /* texto secundario */
+  --t-md:  15px;  /* cuerpo de lectura */
+  --t-lg:  17px;  /* entradillas, títulos de tarjeta */
+  --t-xl:  21px;  /* subtítulos */
+  --t-2xl: 26px;  /* títulos de bloque */
+  --t-3xl: 32px;  /* títulos de sección */
+  --t-4xl: 40px;  /* títulos de página */
+  --t-5xl: 52px;  /* titular del hero */
+
+  /* ── Escala de espaciado (base 4) ──────────────────────────────────────────
+     Ocho escalones. Al venir todos de la misma base, los márgenes y rellenos
+     se alinean solos y desaparece el desorden de valores casi iguales
+     (44, 46, 48, 52...) que hacía que cada sección respirara distinto. */
+  --s1:  4px;
+  --s2:  8px;
+  --s3:  12px;
+  --s4:  16px;
+  --s5:  24px;
+  --s6:  32px;
+  --s7:  48px;
+  --s8:  64px;
+
+  /* Respiro estándar de una sección y margen lateral de página. */
+  --sec-y: 72px;
+  --sec-x: 40px;
+
+  /* Longitud de línea cómoda: pasando de ~75 caracteres el ojo pierde el
+     renglón al volver al margen izquierdo. */
+  --medida: 68ch;
+}
+
+@media (max-width: 968px) {
+  :root {
+    --t-5xl: 38px;
+    --t-4xl: 32px;
+    --t-3xl: 26px;
+    --t-2xl: 22px;
+    --sec-y: 48px;
+    --sec-x: 20px;
+  }
+}
+
+body {
+  font-family: var(--f);
+  background: var(--bg);
+  color: var(--white);
+  font-size: var(--t-md);
+  line-height: 1.65;
+  overflow-x: hidden;
+  /* Mejora el dibujo de la tipografía sobre fondo oscuro, donde el texto claro
+     tiende a verse más grueso de lo que es. */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ===========================================================================
+   Reglas tipográficas transversales
+   ---------------------------------------------------------------------------
+   Cuanto más grande es un texto, menos interlínea necesita: el ojo recorre el
+   renglón sin perderse porque las letras ya son grandes. Al revés, el texto
+   pequeño necesita más aire. Estas reglas aplican esa proporción de forma
+   automática según el tamaño, así ninguna vista tiene que acordarse.
+   Se usa #app para ganarle a los estilos scoped de cada componente.
+   =========================================================================== */
+#app h1, #app h2 { line-height: 1.08; letter-spacing: -.035em; }
+#app h3, #app h4 { line-height: 1.2;  letter-spacing: -.02em; }
+#app p           { line-height: 1.7; }
+
+/* Las etiquetas en mayúsculas necesitan separación entre letras: en versales
+   los caracteres se apelmazan y sin tracking se leen como una mancha. */
+#app [class*="-lbl"], #app [class*="-tag"], #app .pill-t,
+#app .field-label, #app .admin-tab {
+  letter-spacing: .09em;
+}
+
+/* Longitud de línea: la prosa larga se limita para que el ojo no pierda el
+   renglón al volver al margen izquierdo. */
+#app .h-desc, #app .ph-sub, #app .sp-sub, #app .ag-sub, #app .art-sub,
+#app .ns-p, #app .ms-body, #app .paq-sub, #app .rg-sub, #app .gs-txt {
+  max-width: var(--medida);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--teal3); border-radius: 3px; }
+
+/* Selección de texto y focus accesible */
+::selection { background: rgba(45,212,180,.3); color: var(--white); }
+:focus-visible { outline: 2px solid var(--teal-s); outline-offset: 2px; border-radius: 4px; }
+
+html { scroll-behavior: smooth; }
+
+/* Transición entre páginas.
+   Solo opacidad, a propósito: un `transform` sobre el contenedor de la vista
+   convierte a ese elemento en el marco de referencia de todo lo que lleve
+   position:fixed dentro, así que la barra de navegación, el menú móvil y la
+   barra de compra dejaban de anclarse a la pantalla y se pegaban al final del
+   documento. El desvanecido se ve igual de bien y no rompe nada. */
+.page-fade-enter-active,
+.page-fade-leave-active { transition: opacity .2s ease; }
+.page-fade-enter-from,
+.page-fade-leave-to { opacity: 0; }
+
+/* Aparición de secciones al hacer scroll (directiva v-reveal) */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .65s cubic-bezier(.22,.61,.36,1), transform .65s cubic-bezier(.22,.61,.36,1); }
+.reveal-visible { opacity: 1; transform: none; }
+
+/* ===========================================================================
+   Tratamientos de superficie
+   ---------------------------------------------------------------------------
+   Utilidades globales para dar profundidad y ritmo a las secciones. Se aplican
+   junto a la clase de la sección, por ejemplo: class="sec sup-glow".
+   Al ser globales (no scoped) funcionan en cualquier vista.
+   =========================================================================== */
+
+/* Luz ambiental teal: sugiere una fuente de luz fuera de cuadro. */
+.sup-glow { position: relative; isolation: isolate; }
+.sup-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 70% 60% at 15% 0%, rgba(45,212,180,.07) 0%, transparent 60%);
+}
+/* Variante con la luz del lado opuesto, para alternar entre secciones. */
+.sup-glow-r::before {
+  background: radial-gradient(ellipse 70% 60% at 85% 100%, rgba(45,212,180,.06) 0%, transparent 60%);
+}
+
+/* Retícula técnica: textura muy tenue que evita los fondos planos. */
+.sup-grid { position: relative; isolation: isolate; }
+.sup-grid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+  background-size: 64px 64px;
+  /* Se desvanece hacia los bordes para que no se note el corte de la retícula */
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 30%, transparent 100%);
+}
+
+/* Filo luminoso superior: marca el inicio de una sección con una línea que se
+   desvanece a los lados, en vez de un borde plano de lado a lado. */
+.sup-edge { position: relative; }
+.sup-edge::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(45,212,180,.35), transparent);
+}
+
+/* ===========================================================================
+   Carruseles horizontales en móvil
+   ---------------------------------------------------------------------------
+   Varias tiras de tarjetas se desplazan de lado en pantallas chicas. El
+   problema no era que no funcionaran, sino que nada lo indicaba: la última
+   tarjeta quedaba cortada limpiamente contra el borde y parecía el final.
+   El desvanecido resuelve eso — al ver una tarjeta esfumándose se entiende
+   que hay más y que el gesto es deslizar.
+   =========================================================================== */
+@media (max-width: 900px) {
+  #app .fstrip,
+  #app .spk-mag,
+  #app .ag-evs,
+  #app .pq-chips {
+    /* El degradado corta el contenido justo antes del borde derecho */
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 40px), transparent 100%);
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 40px), transparent 100%);
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: var(--sec-x);
+    /* Inercia suave en iOS */
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Al llegar al final se quita el desvanecido: ya no hay nada más que ver */
+  #app .fstrip.fin,
+  #app .spk-mag.fin,
+  #app .ag-evs.fin {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  #app .fstrip > *,
+  #app .spk-mag > * { scroll-snap-align: start; }
+}
+
+/* La barra de scroll horizontal estorba en estas tiras: el desvanecido ya
+   comunica que hay más contenido. */
+#app .fstrip::-webkit-scrollbar,
+#app .spk-mag::-webkit-scrollbar,
+#app .ag-evs::-webkit-scrollbar,
+#app .cmp-scroll::-webkit-scrollbar,
+#app .table-card::-webkit-scrollbar { height: 4px; }
+#app .fstrip::-webkit-scrollbar-thumb,
+#app .spk-mag::-webkit-scrollbar-thumb,
+#app .ag-evs::-webkit-scrollbar-thumb,
+#app .cmp-scroll::-webkit-scrollbar-thumb,
+#app .table-card::-webkit-scrollbar-thumb { background: var(--teal-b); border-radius: 2px; }
+
+/* Microinteracciones: glow en botones primarios (el prefijo #app gana a los estilos scoped) */
+#app .btn-p, #app .tp-buy, #app .bol-btn, #app .sum-btn,
+#app .ag-btn, #app .sp-btn, #app .art-btn, #app .nf, #app .btn-primary {
+  transition: background .15s, box-shadow .25s, transform .15s;
+}
+#app .btn-p:hover, #app .tp-buy:hover, #app .bol-btn:hover, #app .sum-btn:hover,
+#app .ag-btn:hover, #app .sp-btn:hover, #app .art-btn:hover, #app .nf:hover, #app .btn-primary:hover {
+  box-shadow: 0 6px 28px rgba(45,212,180,.28);
+  transform: translateY(-1px);
+}
+
+/* Glow sutil al pasar sobre tarjetas */
+#app .bc:hover, #app .sm:hover, #app .tc:hover, #app .faq-i:hover,
+#app .cc:hover, #app .spk-card:hover, #app .event-card:hover,
+#app .plan-card:hover, #app .gs:hover {
+  box-shadow: 0 14px 44px rgba(0,0,0,.45), 0 0 0 1px var(--teal-b);
+}
+
+/* El ticker se pausa al pasar el mouse */
+.ticker:hover .ti { animation-play-state: paused; }
+
+/* Respeto a usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .page-fade-enter-active, .page-fade-leave-active { transition: none; }
+  .ti { animation: none; }
+}
