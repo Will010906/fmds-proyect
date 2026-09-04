@@ -5,7 +5,8 @@ import axios from 'axios'
 // sin editar código. El valor de respaldo es el despliegue actual, así que en
 // local funciona sin configurar nada.
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://fmds-backend-production-9925.up.railway.app/api',
+  //https://fmds-backend-production-9925.up.railway.app/api
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
 })
 
 // Agrega el token automáticamente a cada request
